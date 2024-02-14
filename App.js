@@ -15,13 +15,14 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Notebook <br></br> </Text>
-      <TextInput 
-      style={styles.TextInput} onChangeText={(txt) => setText(txt)} value={text}></TextInput>
-      <Button title="Add to list" onPress={buttonHandler}></Button>
+      <Text style={styles.title}>Notebook</Text>
+      <View style={styles.row}>
+        <TextInput style={styles.TextInput} onChangeText={(txt) => setText(txt)} value={text} />
+        <Button title="ADD NOTE" onPress={buttonHandler} />
+      </View>
       <FlatList style={styles.list}
         data={notes}
-        renderItem={({ item }) => <Text>{item.name}</Text>}
+        renderItem={({ item }) => <Text style={styles.listItems}>{item.name}</Text>}
       />
       <StatusBar style="auto" />
     </View>
@@ -32,22 +33,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#25282e',
-    alignItems: 'center',
-    justifyContent: 'center',
     color: '#fff',
+    paddingHorizontal: 15,
+    justifyContent: 'center',
   },
   title: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 30,
     color: 'lightblue',
+    marginBottom: 20,
+    marginTop: 100
   },
   TextInput: {
+    flex: 1,
     backgroundColor: 'lightblue',
     minHeight: 30,
-    minWidth: 200,
-    marginBottom: 10
+    marginRight: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+    marginHorizontal: 20,
+  },
+  listItems: {
+    color: 'lightblue',
+    fontSize: 20,
+    paddingVertical: 4,
   },
   list: {
-    color: 'lightblue',
+    alignSelf: 'stretch',
+    marginHorizontal: 20,
+
   }
 });
