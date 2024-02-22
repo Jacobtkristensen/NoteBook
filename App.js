@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity } from 'react-native';
-import { DetailsPage } from './DetailsPage';
+import { DetailsPage } from './detailspage.js';
 export default function App() {
 
   const Stack = createNativeStackNavigator();
