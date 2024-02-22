@@ -4,6 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { DetailsPage } from './detailspage.js';
+import { app, database } from './firebase.js';
+import { collection, addDoc, doc, deleteDoc } from 'firebase/firestore';
+import { useCollection} from 'react-firebase-hooks/firestore'; //install with npm install react-firebase-hooks
 export default function App() {
 
   const Stack = createNativeStackNavigator();
@@ -25,6 +28,10 @@ const Home = ({ navigation, route }) => {
   const [text, setText] = useState('');
   const [notes, setNotes] = useState([]);
 
+  const [values , loading, error] = useCollection(collection(database, "notes"));
+  const data = values?.docs.map((doc) => ({...doc.data(), id: doc.id}));
+  //alert(JSON.stringify(database, null, 4));
+  
   useEffect(() => {
    const unsubscribe = navigation.addListener('focus', () => {
     updateList(route.params?.key, route.params?.content); 
@@ -41,10 +48,24 @@ function updateList(key, content) {
   })
   setNotes(newList);
 }
-  function buttonHandler() {
+async function buttonHandler() {
     setNotes([...notes, { key: notes.length, content: text}]);
     setText('');
+    
+    try {
+      await addDoc(collection(database, "notes"),{content: text});
+    } catch(error) {
+      console.log("Error adding document: ", error)
+    }
   }
+async function deleteNote (item) {
+  try{
+    await deleteDoc(doc(database, "notes", item.id));
+    console.log("Note deleted");
+  } catch(error) {
+    console.log("Error deleting note: ", error)
+  }
+}
   
   function goToDetailsPage(item) {
     navigation.navigate("DetailsPage", {message: item});
@@ -58,9 +79,24 @@ function updateList(key, content) {
         <Button title="ADD NOTE" onPress={buttonHandler} />
       </View>
       <FlatList style={styles.list}
-        data={notes}
-        renderItem={(note) => <TouchableOpacity style={styles.noteTouch} onPress={() =>
-          goToDetailsPage(note.item)}><Text>{note.item.content}</Text></TouchableOpacity>} />
+        data={data}
+        renderItem={(note) => (
+          <View style={styles.noteContainer}>
+            <TouchableOpacity 
+              style={styles.noteTouch} 
+              onPress={() => goToDetailsPage(note.item)}
+            >
+              <Text>{note.item.content}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.deleteTouch} 
+              onPress={() => deleteNote(note.item)}
+            >
+              <Text>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
       <StatusBar style="auto" />
     </View>
   );
@@ -104,10 +140,22 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
 
   },
+  noteContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   noteTouch: {
+    flex: 1,
     padding: 10,
     marginVertical: 5,
     backgroundColor: '#ade6bb',
+    borderRadius: 5,
+  },
+  deleteTouch: {
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: 'red',
     borderRadius: 5,
   }
 });

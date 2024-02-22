@@ -18,7 +18,6 @@ export const DetailsPage = ({navigation, route }) => {
             multiline={true}
             style={styles.input}
         />
-        
         </View>
     )
 }
