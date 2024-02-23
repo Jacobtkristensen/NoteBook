@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { DetailsPage } from './detailspage.js';
 import { app, database } from './firebase.js';
-import { collection, addDoc, doc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { useCollection} from 'react-firebase-hooks/firestore'; //install with npm install react-firebase-hooks
 export default function App() {
 
@@ -66,7 +66,7 @@ async function deleteNote (item) {
     console.log("Error deleting note: ", error)
   }
 }
-  
+
   function goToDetailsPage(item) {
     navigation.navigate("DetailsPage", {message: item});
   }
