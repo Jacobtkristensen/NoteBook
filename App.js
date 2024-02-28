@@ -3,8 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity } from 'react-native';
-import { DetailsPage } from './detailspage.js';
-import { app, database } from './firebase.js';
+import { DetailsPage } from './DetailsPage.js';
+import { database } from './firebase.js';
 import { collection, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { useCollection} from 'react-firebase-hooks/firestore'; //install with npm install react-firebase-hooks
 export default function App() {
